@@ -1,5 +1,6 @@
 package com.in28minutes.rest.webservices.restfulwebservices.user;
 
+import com.in28minutes.rest.webservices.restfulwebservices.post.Post;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -51,4 +52,14 @@ public class UserJPAResource {
     public void deleteUser(@PathVariable Integer id) {
         userRepository.deleteById(id);
     }
+    @GetMapping(path = "/jpa/users/{id}/posts")
+    public List<Post> retrieveUsersAllPosts(@PathVariable Integer id) {
+        Optional<User> user = userRepository.findById(id);
+
+        if (!user.isPresent())
+            throw new UserNotFoundException("id-" +id);
+
+        return user.get().getPost();
+    }
+
 }
